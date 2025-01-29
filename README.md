@@ -1,4 +1,5 @@
-<h3 align="center">nextjs 15</h3>
+<h3 align="center">Next.js 15 Crash Course | Build and Deploy a Production-Ready Full Stack App</h3>
+<p align="center">JavaScipt Mastery https://www.youtube.com/watch?v=Zq5fmkH0T78&t=9619s<p>
 
 ## 1 Setup new project
 
@@ -460,3 +461,61 @@ export const PLAYLIST_BY_SLUG_QUERY =
 ```
 
 </details>
+
+## 4 Sanity Setup && Sanity Schema
+
+```bash
+npm i sanity-plugin-markdown
+```
+
+- sanity.config.ts
+
+```bash
+import { markdownSchema } from "sanity-plugin-markdown";
+....
+  plugins: [
+    structureTool({ structure }),
+    // Vision is for querying with GROQ from inside the Studio
+    // https://www.sanity.io/docs/the-vision-plugin
+    visionTool({ defaultApiVersion: apiVersion }),
+    markdownSchema(),
+  ],
+});
+....
+```
+
+- main layout
+
+```bash
+import "easymde/dist/easymde.min.css";
+```
+
+- type sanity extract.json
+
+```bash
+npx sanity@latest schema extract --path=./sanity/extract.json
+```
+
+- new file sanity-typegen.json
+
+```bash
+{
+  "path": "./src/**/*.{ts,tsx,js,jsx}",
+  "schema": "./sanity/extract.json",
+  "generates": "./sanity/types.ts"
+}
+```
+
+- command gen type sanity sanity-typegen.json
+
+```bash
+npx sanity@latest typegen generate
+```
+
+- แก้ไฟล์ package.json เพื่อเรียกใช้งาน typegen ผ่านคำสั่ง npm run typegen
+
+```bash
+ "scripts": {
+    "typegen": "sanity schema extract --path=./sanity/extract.json && sanity typegen generate"
+  },
+```
